@@ -1,0 +1,13 @@
+&lt;resources&gt;
+    &lt;string name="app_name"&gt;Magpie Android&lt;/string&gt;
+    &lt;string name="start_capture"&gt;开始超分&lt;/string&gt;
+    &lt;string name="stop_capture"&gt;停止超分&lt;/string&gt;
+    &lt;string name="select_effect"&gt;选择效果&lt;/string&gt;
+    &lt;string name="anime4k"&gt;Anime4K&lt;/string&gt;
+    &lt;string name="fsr"&gt;FSR&lt;/string&gt;
+    &lt;string name="bicubic"&gt;Bicubic&lt;/string&gt;
+    &lt;string name="lanczos"&gt;Lanczos&lt;/string&gt;
+    &lt;string name="scale_factor"&gt;缩放比例&lt;/string&gt;
+    &lt;string name="permission_required"&gt;需要屏幕录制权限&lt;/string&gt;
+    &lt;string name="grant_permission"&gt;授予权限&lt;/string&gt;
+&lt;/resources&gt;

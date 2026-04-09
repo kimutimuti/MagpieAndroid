@@ -1,0 +1,114 @@
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"&gt;
+
+    &lt;TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp" /&gt;
+
+    &lt;com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardElevation="4dp"&gt;
+
+        &lt;LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"&gt;
+
+            &lt;TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/select_effect"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp" /&gt;
+
+            &lt;RadioGroup
+                android:id="@+id/effectGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"&gt;
+
+                &lt;RadioButton
+                    android:id="@+id/radioAnime4K"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/anime4k"
+                    android:checked="true" /&gt;
+
+                &lt;RadioButton
+                    android:id="@+id/radioFSR"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fsr" /&gt;
+
+                &lt;RadioButton
+                    android:id="@+id/radioBicubic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bicubic" /&gt;
+
+                &lt;RadioButton
+                    android:id="@+id/radioLanczos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lanczos" /&gt;
+            &lt;/RadioGroup&gt;
+        &lt;/LinearLayout&gt;
+    &lt;/com.google.android.material.card.MaterialCardView&gt;
+
+    &lt;com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:cardElevation="4dp"&gt;
+
+        &lt;LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"&gt;
+
+            &lt;TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/scale_factor"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp" /&gt;
+
+            &lt;SeekBar
+                android:id="@+id/scaleSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="3"
+                android:progress="1" /&gt;
+
+            &lt;TextView
+                android:id="@+id/scaleValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2.0x"
+                android:layout_gravity="end" /&gt;
+        &lt;/LinearLayout&gt;
+    &lt;/com.google.android.material.card.MaterialCardView&gt;
+
+    &lt;com.google.android.material.button.MaterialButton
+        android:id="@+id/startButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/start_capture"
+        android:textSize="18sp"
+        android:paddingVertical="12dp" /&gt;
+
+&lt;/LinearLayout&gt;
