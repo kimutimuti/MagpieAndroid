@@ -21,7 +21,6 @@ android {
                 cppFlags += "-std=c++17"
             }
         }
-        }
     }
 
     buildTypes {
@@ -45,6 +44,7 @@ android {
     
     buildFeatures {
         viewBinding = true
+    }
 
     externalNativeBuild {
         cmake {
