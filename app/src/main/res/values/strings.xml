@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
 &lt;resources&gt;
     &lt;string name="app_name"&gt;Magpie Android&lt;/string&gt;
     &lt;string name="start_capture"&gt;开始超分&lt;/string&gt;
