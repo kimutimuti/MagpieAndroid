@@ -62,7 +62,7 @@ class ScreenCaptureService : Service() {
         resultCode = intent?.getIntExtra("resultCode", 0) ?: 0
         resultData = intent?.getParcelableExtra("data")
         
-        if (resultCode != 0 &amp;&amp; resultData != null) {
+        if (resultCode != 0 && resultData != null) {
             mediaProjection = mediaProjectionManager?.getMediaProjection(resultCode, resultData!!)
             setupMediaProjection()
             createOverlay()
@@ -72,7 +72,7 @@ class ScreenCaptureService : Service() {
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 "Screen Capture Service",
@@ -84,7 +84,7 @@ class ScreenCaptureService : Service() {
     }
 
     private fun createNotification(): Notification {
-        return if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder(this, CHANNEL_ID)
                 .setContentTitle("Magpie Android")
                 .setContentText("超分辨率运行中...")
@@ -107,7 +107,7 @@ class ScreenCaptureService : Service() {
 
         imageReader = ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, 2)
         
-        imageReader?.setOnImageAvailableListener({ reader -&gt;
+        imageReader?.setOnImageAvailableListener({ reader ->
             val image: Image? = try {
                 reader.acquireLatestImage()
             } catch (e: Exception) {
@@ -159,7 +159,7 @@ class ScreenCaptureService : Service() {
         val params = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT,
-            if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
             else
                 @Suppress("DEPRECATION")

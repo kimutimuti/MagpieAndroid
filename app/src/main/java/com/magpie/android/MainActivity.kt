@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private val projectionResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ) { result -&gt;
+    ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             Toast.makeText(this, "权限已授予（演示版本）", Toast.LENGTH_SHORT).show()
         }
@@ -47,24 +47,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
-        effectGroup.setOnCheckedChangeListener { _, checkedId -&gt;
+        effectGroup.setOnCheckedChangeListener { _, checkedId ->
             selectedEffect = when (checkedId) {
-                R.id.radioAnime4K -&gt; 0
-                R.id.radioFSR -&gt; 1
-                R.id.radioBicubic -&gt; 2
-                R.id.radioLanczos -&gt; 3
-                else -&gt; 0
+                R.id.radioAnime4K -> 0
+                R.id.radioFSR -> 1
+                R.id.radioBicubic -> 2
+                R.id.radioLanczos -> 3
+                else -> 0
             }
         }
 
         scaleSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 scaleFactor = when (progress) {
-                    0 -&gt; 1.5f
-                    1 -&gt; 2.0f
-                    2 -&gt; 2.5f
-                    3 -&gt; 3.0f
-                    else -&gt; 2.0f
+                    0 -> 1.5f
+                    1 -> 2.0f
+                    2 -> 2.5f
+                    3 -> 3.0f
+                    else -> 2.0f
                 }
                 scaleValue.text = "${scaleFactor}x"
             }

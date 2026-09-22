@@ -44,7 +44,7 @@ class MagpieGLView(context: Context) : GLSurfaceView(context) {
         }
 
         override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-            if (frameWidth &gt; 0 &amp;&amp; frameHeight &gt; 0) {
+            if (frameWidth > 0 && frameHeight > 0) {
                 val nativeRenderer = NativeRenderer()
                 nativeRenderer.initialize(nativeRendererPtr, frameWidth, frameHeight)
                 nativeRenderer.setEffect(nativeRendererPtr, currentEffect)
@@ -55,7 +55,7 @@ class MagpieGLView(context: Context) : GLSurfaceView(context) {
 
         override fun onDrawFrame(gl: GL10?) {
             val nativeRenderer = NativeRenderer()
-            frameData?.let { data -&gt;
+            frameData?.let { data ->
                 val buffer = java.nio.ByteBuffer.wrap(data)
                 nativeRenderer.updateTexture(nativeRendererPtr, inputTexture, buffer, frameWidth, frameHeight)
             }
