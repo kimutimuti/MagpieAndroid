@@ -23,7 +23,8 @@ jobs:
       uses: nttld/setup-ndk@v1
       with:
         ndk-version: 'r27b'
-        distribution: 'temurin'
+        link-to-sdk: true
+
     
     - name: Download gradle-wrapper.jar
       run: |
