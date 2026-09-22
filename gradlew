@@ -73,7 +73,7 @@ while
     [ -h "$app_path" ]
 do
     ls=$( ls -ld "$app_path" )
-    link=${ls#*' -&gt; '}
+    link=${ls#*' -> '}
     case $link in             #(
       /*)   app_path=$link ;; #(
       *)    app_path=$APP_HOME$link ;;
@@ -90,14 +90,14 @@ MAX_FD=maximum
 
 warn () {
     echo "$*"
-} &gt;&amp;2
+} >&2
 
 die () {
     echo
     echo "$*"
     echo
     exit 1
-} &gt;&amp;2
+} >&2
 
 # OS specific support (must be 'true' or 'false').
 cygwin=false
@@ -130,7 +130,7 @@ location of your Java installation."
     fi
 else
     JAVACMD=java
-    if ! command -v java &gt;/dev/null 2&gt;&amp;1
+    if ! command -v java >/dev/null 2>&1
     then
         die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
 
@@ -140,7 +140,7 @@ location of your Java installation."
 fi
 
 # Increase the maximum file descriptors if we can.
-if ! "$cygwin" &amp;&amp; ! "$darwin" &amp;&amp; ! "$nonstop" ; then
+if ! "$cygwin" && ! "$darwin" && ! "$nonstop" ; then
     case $MAX_FD in #(
       max*)
         # In POSIX sh, ulimit -H is undefined. That's why the result is checked to see if it worked.
