@@ -1,12 +1,12 @@
-&lt;?xml version="1.0" encoding="utf-8"?&gt;
-&lt;FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"&gt;
+    android:background="@android:color/transparent">
 
-    &lt;TextureView
+    <TextureView
         android:id="@+id/overlayTexture"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" /&gt;
+        android:layout_height="match_parent" />
 
-&lt;/FrameLayout&gt;
+</FrameLayout>
