@@ -3,14 +3,14 @@
 
 namespace ShaderUtils {
     
-    GLuint createShader(GLenum type, const std::string&amp; source) {
+    GLuint createShader(GLenum type, const std::string& source) {
         GLuint shader = glCreateShader(type);
         const char* sourcePtr = source.c_str();
-        glShaderSource(shader, 1, &amp;sourcePtr, nullptr);
+        glShaderSource(shader, 1, &sourcePtr, nullptr);
         glCompileShader(shader);
         
         GLint success;
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &amp;success);
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if (!success) {
             char infoLog[512];
             glGetShaderInfoLog(shader, 512, nullptr, infoLog);
@@ -22,7 +22,7 @@ namespace ShaderUtils {
         return shader;
     }
     
-    GLuint createProgram(const std::string&amp; vertexSource, const std::string&amp; fragmentSource) {
+    GLuint createProgram(const std::string& vertexSource, const std::string& fragmentSource) {
         GLuint vertexShader = createShader(GL_VERTEX_SHADER, vertexSource);
         if (!vertexShader) return 0;
         
@@ -38,7 +38,7 @@ namespace ShaderUtils {
         glLinkProgram(program);
         
         GLint success;
-        glGetProgramiv(program, GL_LINK_STATUS, &amp;success);
+        glGetProgramiv(program, GL_LINK_STATUS, &success);
         if (!success) {
             char infoLog[512];
             glGetProgramInfoLog(program, 512, nullptr, infoLog);

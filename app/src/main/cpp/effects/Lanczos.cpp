@@ -18,12 +18,12 @@ namespace Effects {
             const int LANCZOS_SIZE = 3;
             
             float sinc(float x) {
-                if (abs(x) &lt; 0.0001) return 1.0;
+                if (abs(x) < 0.0001) return 1.0;
                 return sin(PI * x) / (PI * x);
             }
             
             float lanczos(float x) {
-                if (abs(x) &gt;= float(LANCZOS_SIZE)) return 0.0;
+                if (abs(x) >= float(LANCZOS_SIZE)) return 0.0;
                 return sinc(x) * sinc(x / float(LANCZOS_SIZE));
             }
             
@@ -35,8 +35,8 @@ namespace Effects {
                 vec4 result = vec4(0.0);
                 float totalWeight = 0.0;
                 
-                for (int i = -LANCZOS_SIZE + 1; i &lt;= LANCZOS_SIZE; i++) {
-                    for (int j = -LANCZOS_SIZE + 1; j &lt;= LANCZOS_SIZE; j++) {
+                for (int i = -LANCZOS_SIZE + 1; i <= LANCZOS_SIZE; i++) {
+                    for (int j = -LANCZOS_SIZE + 1; j <= LANCZOS_SIZE; j++) {
                         vec2 offset = vec2(float(i), float(j)) * texelSize;
                         float wx = lanczos(float(i) - f.x);
                         float wy = lanczos(float(j) - f.y);

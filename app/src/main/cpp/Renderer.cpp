@@ -27,8 +27,8 @@ Renderer::~Renderer() {
 bool Renderer::initialize(int width, int height) {
     m_width = width;
     m_height = height;
-    m_outputWidth = static_cast&lt;int&gt;(width * m_scale);
-    m_outputHeight = static_cast&lt;int&gt;(height * m_scale);
+    m_outputWidth = static_cast<int>(width * m_scale);
+    m_outputHeight = static_cast<int>(height * m_scale);
     
     std::string fragmentShader;
     switch (m_effectType) {
@@ -62,8 +62,8 @@ bool Renderer::initialize(int width, int height) {
          1.0f,  1.0f, 1.0f, 1.0f
     };
     
-    glGenVertexArrays(1, &amp;m_vao);
-    glGenBuffers(1, &amp;m_vbo);
+    glGenVertexArrays(1, &m_vao);
+    glGenBuffers(1, &m_vbo);
     glBindVertexArray(m_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -83,7 +83,7 @@ bool Renderer::initialize(int width, int height) {
         return false;
     }
     
-    LOGI("Renderer initialized: %dx%d -&gt; %dx%d", width, height, m_outputWidth, m_outputHeight);
+    LOGI("Renderer initialized: %dx%d -> %dx%d", width, height, m_outputWidth, m_outputHeight);
     return true;
 }
 
@@ -93,26 +93,26 @@ void Renderer::destroy() {
         m_program = 0;
     }
     if (m_vbo) {
-        glDeleteBuffers(1, &amp;m_vbo);
+        glDeleteBuffers(1, &m_vbo);
         m_vbo = 0;
     }
     if (m_vao) {
-        glDeleteVertexArrays(1, &amp;m_vao);
+        glDeleteVertexArrays(1, &m_vao);
         m_vao = 0;
     }
     if (m_fbo) {
-        glDeleteFramebuffers(1, &amp;m_fbo);
+        glDeleteFramebuffers(1, &m_fbo);
         m_fbo = 0;
     }
     if (m_outputTexture) {
-        glDeleteTextures(1, &amp;m_outputTexture);
+        glDeleteTextures(1, &m_outputTexture);
         m_outputTexture = 0;
     }
 }
 
 bool Renderer::createFramebuffer() {
-    glGenFramebuffers(1, &amp;m_fbo);
-    glGenTextures(1, &amp;m_outputTexture);
+    glGenFramebuffers(1, &m_fbo);
+    glGenTextures(1, &m_outputTexture);
     
     glBindTexture(GL_TEXTURE_2D, m_outputTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_outputWidth, m_outputHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
@@ -151,7 +151,7 @@ void Renderer::render(GLuint inputTexture) {
     glUniform1i(texLoc, 0);
     
     if (resLoc != -1) {
-        glUniform2f(resLoc, static_cast&lt;float&gt;(m_width), static_cast&lt;float&gt;(m_height));
+        glUniform2f(resLoc, static_cast<float>(m_width), static_cast<float>(m_height));
     }
     if (scaleLoc != -1) {
         glUniform1f(scaleLoc, m_scale);
@@ -197,8 +197,8 @@ void Renderer::setEffect(int effectType) {
 
 void Renderer::setScaleFactor(float scale) {
     m_scale = scale;
-    m_outputWidth = static_cast&lt;int&gt;(m_width * m_scale);
-    m_outputHeight = static_cast&lt;int&gt;(m_height * m_scale);
+    m_outputWidth = static_cast<int>(m_width * m_scale);
+    m_outputHeight = static_cast<int>(m_height * m_scale);
     
     if (m_outputTexture) {
         glBindTexture(GL_TEXTURE_2D, m_outputTexture);
@@ -208,7 +208,7 @@ void Renderer::setScaleFactor(float scale) {
 
 GLuint Renderer::createTexture(int width, int height) {
     GLuint texture;
-    glGenTextures(1, &amp;texture);
+    glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

@@ -1,9 +1,9 @@
 #pragma once
 
-#include &lt;android/log.h&gt;
-#include &lt;GLES3/gl3.h&gt;
-#include &lt;EGL/egl.h&gt;
-#include &lt;string&gt;
+#include <android/log.h>
+#include <GLES3/gl3.h>
+#include <EGL/egl.h>
+#include <string>
 
 #define LOG_TAG "MagpieNative"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
