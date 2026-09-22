@@ -21,6 +21,7 @@ android {
                 cppFlags += "-std=c++17"
             }
         }
+        }
     }
 
     buildTypes {
