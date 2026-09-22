@@ -19,6 +19,12 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: Setup Android NDK
+      uses: nttld/setup-ndk@v1
+      with:
+        ndk-version: '27'
+        distribution: 'temurin'
+    
     - name: Download gradle-wrapper.jar
       run: |
         mkdir -p gradle/wrapper
