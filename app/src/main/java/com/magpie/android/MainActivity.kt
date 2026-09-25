@@ -9,6 +9,7 @@ import android.widget.RadioGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import android.media.projection.MediaProjectionManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 
@@ -26,12 +27,20 @@ class MainActivity : AppCompatActivity() {
     private val projectionResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            Toast.makeText(this, "权限已授予（演示版本）", Toast.LENGTH_SHORT).show()
-        }
-    }
+        if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+            val intent = Intent(this, ScreenCaptureService::class.java).apply {
+                putExtra("RESULT_CODE", result.resultCode)
+                putExtra("DATA", result.data)
+                putExtra("EFFECT", selectedEffect)
+                putExtra("SCALE", scaleFactor)
+            }
+            startService(intent)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+            isCapturing = true
+            startButton.text = getString(R.string.stop_capture)
+       }
+     }
+e fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -83,14 +92,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestPermission() {
-        Toast.makeText(this, "这是演示版本，实际功能需要 NDK 构建", Toast.LENGTH_LONG).show()
-        isCapturing = true
-        startButton.text = getString(R.string.stop_capture)
+        val mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+        projectionResultLauncher.launch(mediaProjectionManager.createScreenCaptureIntent())
     }
 
     private fun stopCapture() {
+        val intent = Intent(this, ScreenCaptureService::class.java)
+        stopService(intent)
+
         isCapturing = false
         startButton.text = getString(R.string.start_capture)
-        Toast.makeText(this, "已停止", Toast.LENGTH_SHORT).show()
     }
 }
