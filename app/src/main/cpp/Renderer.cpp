@@ -14,10 +14,22 @@ const char* vertexShaderSource = R"(
     }
 )";
 
+const char* passThroughFragmentShaderSource = R"(
+    #version 300 es
+    precision mediump float;
+    in vec2 vTexCoord;
+    out vec4 fragColor;
+    uniform sampler2D uTexture;
+    
+    void main() {
+        fragColor = texture(uTexture, vTexCoord);
+    }
+)";
+
 Renderer::Renderer()
     : m_width(0), m_height(0), m_outputWidth(0), m_outputHeight(0),
-      m_scale(2.0f), m_effectType(0), m_program(0), m_vbo(0), m_vao(0),
-      m_fbo(0), m_outputTexture(0) {
+      m_scale(2.0f), m_effectType(0), m_program(0), m_passThroughProgram(0),
+      m_vbo(0), m_vao(0), m_fbo(0), m_outputTexture(0) {
 }
 
 Renderer::~Renderer() {
@@ -52,6 +64,12 @@ bool Renderer::initialize(int width, int height) {
     m_program = ShaderUtils::createProgram(vertexShaderSource, fragmentShader);
     if (!m_program) {
         LOGE("Failed to create shader program");
+        return false;
+    }
+    
+    m_passThroughProgram = ShaderUtils::createProgram(vertexShaderSource, passThroughFragmentShaderSource);
+    if (!m_passThroughProgram) {
+        LOGE("Failed to create pass-through shader program");
         return false;
     }
     
@@ -91,6 +109,10 @@ void Renderer::destroy() {
     if (m_program) {
         glDeleteProgram(m_program);
         m_program = 0;
+    }
+    if (m_passThroughProgram) {
+        glDeleteProgram(m_passThroughProgram);
+        m_passThroughProgram = 0;
     }
     if (m_vbo) {
         glDeleteBuffers(1, &m_vbo);
@@ -134,8 +156,9 @@ bool Renderer::createFramebuffer() {
 }
 
 void Renderer::render(GLuint inputTexture) {
-    if (!m_program) return;
+    if (!m_program || !m_passThroughProgram) return;
     
+    // --- 1. FBO (m_outputTexture) への描画（拡大・超解像処理） ---
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     glViewport(0, 0, m_outputWidth, m_outputHeight);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -159,9 +182,21 @@ void Renderer::render(GLuint inputTexture) {
     
     glBindVertexArray(m_vao);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    glBindVertexArray(0);
     
+    // --- 2. 実際の画面への描画（全画面表示） ---
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, m_width, m_height);
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    glUseProgram(m_passThroughProgram);
+    
+    GLint passTexLoc = glGetUniformLocation(m_passThroughProgram, "uTexture");
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_outputTexture);
+    glUniform1i(passTexLoc, 0);
+    
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
 }
 
 void Renderer::setEffect(int effectType) {
