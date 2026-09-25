@@ -1,7 +1,9 @@
 package com.magpie.android
 
 import android.content.Context
+import android.graphics.PixelFormat
 import android.opengl.GLSurfaceView
+import java.nio.ByteBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -11,6 +13,12 @@ class MagpieGLView(context: Context) : GLSurfaceView(context) {
 
     init {
         setEGLContextClientVersion(3)
+        
+        // 背景を透明にするための設定（重要）
+        setZOrderOnTop(true)
+        setEGLConfigChooser(8, 8, 8, 8, 16, 0)
+        holder.setFormat(PixelFormat.TRANSLUCENT)
+
         renderer = MagpieRenderer()
         setRenderer(renderer)
         renderMode = RENDERMODE_WHEN_DIRTY
@@ -24,8 +32,8 @@ class MagpieGLView(context: Context) : GLSurfaceView(context) {
         renderer.setScaleFactor(scale)
     }
 
-    fun updateFrame(data: ByteArray, width: Int, height: Int) {
-        renderer.updateFrame(data, width, height)
+    fun updateFrameDirect(buffer: ByteBuffer, width: Int, height: Int, stride: Int) {
+        renderer.updateFrameDirect(buffer, width, height, stride)
         requestRender()
     }
 
@@ -36,7 +44,8 @@ class MagpieGLView(context: Context) : GLSurfaceView(context) {
         private var currentScale = 2.0f
         private var frameWidth = 0
         private var frameHeight = 0
-        private var frameData: ByteArray? = null
+        private var frameStride = 0
+        private var frameBuffer: ByteBuffer? = null
 
         override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
             val nativeRenderer = NativeRenderer()
@@ -55,9 +64,8 @@ class MagpieGLView(context: Context) : GLSurfaceView(context) {
 
         override fun onDrawFrame(gl: GL10?) {
             val nativeRenderer = NativeRenderer()
-            frameData?.let { data ->
-                val buffer = java.nio.ByteBuffer.wrap(data)
-                nativeRenderer.updateTexture(nativeRendererPtr, inputTexture, buffer, frameWidth, frameHeight)
+            frameBuffer?.let { buffer ->
+                nativeRenderer.updateTexture(nativeRendererPtr, inputTexture, buffer, frameWidth, frameHeight, frameStride)
             }
             if (inputTexture != 0) {
                 nativeRenderer.render(nativeRendererPtr, inputTexture)
@@ -78,8 +86,9 @@ class MagpieGLView(context: Context) : GLSurfaceView(context) {
             }
         }
 
-        fun updateFrame(data: ByteArray, width: Int, height: Int) {
-            frameData = data
+        fun updateFrameDirect(buffer: ByteBuffer, width: Int, height: Int, stride: Int) {
+            frameBuffer = buffer
+            frameStride = stride
             if (frameWidth != width || frameHeight != height) {
                 frameWidth = width
                 frameHeight = height
@@ -88,8 +97,6 @@ class MagpieGLView(context: Context) : GLSurfaceView(context) {
                     nativeRenderer.initialize(nativeRendererPtr, width, height)
                     nativeRenderer.setEffect(nativeRendererPtr, currentEffect)
                     nativeRenderer.setScaleFactor(nativeRendererPtr, currentScale)
-                    if (inputTexture != 0) {
-                    }
                     inputTexture = nativeRenderer.createTexture(nativeRendererPtr, width, height)
                 }
             }
