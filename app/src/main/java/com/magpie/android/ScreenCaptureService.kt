@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.graphics.PixelFormat
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
@@ -45,7 +46,17 @@ class ScreenCaptureService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
-        startForeground(NOTIFICATION_ID, createNotification())
+        
+        // Android 10 (Q) 以降はフォアグラウンドサービスの種類を明示的に指定する
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(
+                NOTIFICATION_ID, 
+                createNotification(), 
+                ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PROJECTION
+            )
+        } else {
+            startForeground(NOTIFICATION_ID, createNotification())
+        }
         
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
@@ -56,7 +67,6 @@ class ScreenCaptureService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // MainActivityから大文字のキーで渡されるように修正を合わせます
         selectedEffect = intent?.getIntExtra("EFFECT", 0) ?: 0
         scaleFactor = intent?.getFloatExtra("SCALE", 2.0f) ?: 2.0f
         resultCode = intent?.getIntExtra("RESULT_CODE", 0) ?: 0
