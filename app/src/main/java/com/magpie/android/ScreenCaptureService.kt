@@ -154,14 +154,12 @@ class ScreenCaptureService : Service() {
 
     private fun processImage(image: Image) {
         val planes = image.planes
-        val buffer: ByteBuffer = planes[0].buffer // 元からDirect Bufferです
+        val buffer: ByteBuffer = planes[0].buffer 
         val pixelStride = planes[0].pixelStride
         val rowStride = planes[0].rowStride
         
-        // OpenGLに渡すためのピクセル単位の行幅 (stride)
         val rowStridePixels = rowStride / pixelStride
         
-        // ダイレクトバッファを直接C++に渡す（非常に高速）
         glView?.updateFrameDirect(buffer, image.width, image.height, rowStridePixels)
     }
 
@@ -175,7 +173,7 @@ class ScreenCaptureService : Service() {
                 @Suppress("DEPRECATION")
                 WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             PixelFormat.TRANSLUCENT
