@@ -161,6 +161,7 @@ void Renderer::render(GLuint inputTexture) {
     // --- 1. FBO (m_outputTexture) への描画（拡大・超解像処理） ---
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
     glViewport(0, 0, m_outputWidth, m_outputHeight);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // 背景を透明黒でクリア
     glClear(GL_COLOR_BUFFER_BIT);
     
     glUseProgram(m_program);
@@ -186,6 +187,7 @@ void Renderer::render(GLuint inputTexture) {
     // --- 2. 実際の画面への描画（全画面表示） ---
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, m_width, m_height);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // 実際の画面も透明黒でクリア
     glClear(GL_COLOR_BUFFER_BIT);
     
     glUseProgram(m_passThroughProgram);
@@ -253,9 +255,16 @@ GLuint Renderer::createTexture(int width, int height) {
     return texture;
 }
 
-void Renderer::updateTexture(GLuint texture, void* data, int width, int height) {
+void Renderer::updateTexture(GLuint texture, void* data, int width, int height, int stride) {
     glBindTexture(GL_TEXTURE_2D, texture);
+    
+    // 行のパディング(Stride)をOpenGLに教えることで画像崩れを防ぐ
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, stride);
+    
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    
+    // 他のテクスチャ操作に影響を与えないよう元に戻す
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 }
 
 void Renderer::renderQuad() {
