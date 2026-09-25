@@ -43,7 +43,6 @@ class ScreenCaptureService : Service() {
     private var resultCode = 0
     private var resultData: Intent? = null
 
-    // Android 14対策: 必須のコールバック定義
     private val projectionCallback = object : MediaProjection.Callback() {
         override fun onStop() {
             super.onStop()
@@ -139,7 +138,6 @@ class ScreenCaptureService : Service() {
             }
         }, handler)
         
-        // 追加: VirtualDisplayの作成前に必ずコールバックを登録する (Android 14以降の要件)
         mediaProjection?.registerCallback(projectionCallback, handler)
         
         virtualDisplay = mediaProjection?.createVirtualDisplay(
@@ -156,25 +154,15 @@ class ScreenCaptureService : Service() {
 
     private fun processImage(image: Image) {
         val planes = image.planes
-        val buffer: ByteBuffer = planes[0].buffer
+        val buffer: ByteBuffer = planes[0].buffer // 元からDirect Bufferです
         val pixelStride = planes[0].pixelStride
         val rowStride = planes[0].rowStride
-        val rowPadding = rowStride - pixelStride * image.width
         
-        val data = ByteArray(image.width * image.height * 4)
-        var offset = 0
+        // OpenGLに渡すためのピクセル単位の行幅 (stride)
+        val rowStridePixels = rowStride / pixelStride
         
-        for (i in 0 until image.height) {
-            for (j in 0 until image.width) {
-                data[offset++] = buffer.get()
-                data[offset++] = buffer.get()
-                data[offset++] = buffer.get()
-                data[offset++] = buffer.get()
-            }
-            buffer.position(buffer.position() + rowPadding)
-        }
-        
-        glView?.updateFrame(data, image.width, image.height)
+        // ダイレクトバッファを直接C++に渡す（非常に高速）
+        glView?.updateFrameDirect(buffer, image.width, image.height, rowStridePixels)
     }
 
     private fun createOverlay() {
