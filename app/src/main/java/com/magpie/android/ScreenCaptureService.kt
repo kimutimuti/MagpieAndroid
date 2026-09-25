@@ -43,11 +43,18 @@ class ScreenCaptureService : Service() {
     private var resultCode = 0
     private var resultData: Intent? = null
 
+    // Android 14対策: 必須のコールバック定義
+    private val projectionCallback = object : MediaProjection.Callback() {
+        override fun onStop() {
+            super.onStop()
+            stopSelf()
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
         
-        // Android 10 (Q) 以降はフォアグラウンドサービスの種類を明示的に指定する
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(
                 NOTIFICATION_ID, 
@@ -132,6 +139,9 @@ class ScreenCaptureService : Service() {
             }
         }, handler)
         
+        // 追加: VirtualDisplayの作成前に必ずコールバックを登録する (Android 14以降の要件)
+        mediaProjection?.registerCallback(projectionCallback, handler)
+        
         virtualDisplay = mediaProjection?.createVirtualDisplay(
             VIRTUAL_DISPLAY_NAME,
             width,
@@ -204,6 +214,7 @@ class ScreenCaptureService : Service() {
         
         virtualDisplay?.release()
         imageReader?.close()
+        mediaProjection?.unregisterCallback(projectionCallback)
         mediaProjection?.stop()
         handlerThread?.quitSafely()
     }
