@@ -63,11 +63,15 @@ Java_com_magpie_android_NativeRenderer_createTexture(JNIEnv* env, jobject thiz, 
 }
 
 JNIEXPORT void JNICALL
-Java_com_magpie_android_NativeRenderer_updateTexture(JNIEnv* env, jobject thiz, jlong rendererPtr, jint texture, jobject buffer, jint width, jint height) {
+Java_com_magpie_android_NativeRenderer_updateTexture(JNIEnv* env, jobject thiz, jlong rendererPtr, jint texture, jobject buffer, jint width, jint height, jint stride) {
     Renderer* renderer = reinterpret_cast<Renderer*>(rendererPtr);
     if (renderer) {
         void* data = env->GetDirectBufferAddress(buffer);
-        renderer->updateTexture(static_cast<GLuint>(texture), data, width, height);
+        if (data != nullptr) {
+            renderer->updateTexture(static_cast<GLuint>(texture), data, width, height, stride);
+        } else {
+            LOGE("Failed to get direct buffer address");
+        }
     }
 }
 
