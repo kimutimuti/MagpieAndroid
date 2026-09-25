@@ -21,7 +21,7 @@ public:
     void setScaleFactor(float scale);
     
     GLuint createTexture(int width, int height);
-    void updateTexture(GLuint texture, void* data, int width, int height);
+    void updateTexture(GLuint texture, void* data, int width, int height, int stride); // stride追加
     
 private:
     bool createFramebuffer();
