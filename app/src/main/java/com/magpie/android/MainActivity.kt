@@ -3,13 +3,13 @@ package com.magpie.android
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.widget.Button
 import android.widget.RadioGroup
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
-import android.media.projection.MediaProjectionManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 
@@ -24,6 +24,13 @@ class MainActivity : AppCompatActivity() {
     private var selectedEffect = 0
     private var scaleFactor = 2.0f
 
+    // C++の共有ライブラリをロード
+    companion object {
+        init {
+            System.loadLibrary("magpie")
+        }
+    }
+
     private val projectionResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -35,12 +42,13 @@ class MainActivity : AppCompatActivity() {
                 putExtra("SCALE", scaleFactor)
             }
             startService(intent)
-
+            
             isCapturing = true
             startButton.text = getString(R.string.stop_capture)
-       }
-     }
-e fun onCreate(savedInstanceState: Bundle?) {
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -99,8 +107,9 @@ e fun onCreate(savedInstanceState: Bundle?) {
     private fun stopCapture() {
         val intent = Intent(this, ScreenCaptureService::class.java)
         stopService(intent)
-
+        
         isCapturing = false
         startButton.text = getString(R.string.start_capture)
+        Toast.makeText(this, "已停止", Toast.LENGTH_SHORT).show()
     }
 }
