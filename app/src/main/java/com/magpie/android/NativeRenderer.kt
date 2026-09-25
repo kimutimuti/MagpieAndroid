@@ -1,5 +1,7 @@
 package com.magpie.android
 
+import java.nio.ByteBuffer
+
 class NativeRenderer {
     companion object {
         init {
@@ -14,5 +16,6 @@ class NativeRenderer {
     external fun setEffect(rendererPtr: Long, effectType: Int)
     external fun setScaleFactor(rendererPtr: Long, scale: Float)
     external fun createTexture(rendererPtr: Long, width: Int, height: Int): Int
-    external fun updateTexture(rendererPtr: Long, texture: Int, buffer: java.nio.ByteBuffer, width: Int, height: Int)
+    // stride引数を追加
+    external fun updateTexture(rendererPtr: Long, texture: Int, buffer: ByteBuffer, width: Int, height: Int, stride: Int)
 }
