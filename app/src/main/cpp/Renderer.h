@@ -35,6 +35,7 @@ private:
     int m_effectType;
     
     GLuint m_program;
+    GLuint m_passThroughProgram;
     GLuint m_vbo;
     GLuint m_vao;
     GLuint m_fbo;
