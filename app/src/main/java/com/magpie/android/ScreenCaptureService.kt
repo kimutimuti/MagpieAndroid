@@ -19,7 +19,6 @@ import android.os.HandlerThread
 import android.os.IBinder
 import android.view.Gravity
 import android.view.WindowManager
-import androidx.annotation.RequiresApi
 import java.nio.ByteBuffer
 
 class ScreenCaptureService : Service() {
@@ -57,10 +56,12 @@ class ScreenCaptureService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        selectedEffect = intent?.getIntExtra("effect", 0) ?: 0
-        scaleFactor = intent?.getFloatExtra("scale", 2.0f) ?: 2.0f
-        resultCode = intent?.getIntExtra("resultCode", 0) ?: 0
-        resultData = intent?.getParcelableExtra("data")
+        // MainActivityから大文字のキーで渡されるように修正を合わせます
+        selectedEffect = intent?.getIntExtra("EFFECT", 0) ?: 0
+        scaleFactor = intent?.getFloatExtra("SCALE", 2.0f) ?: 2.0f
+        resultCode = intent?.getIntExtra("RESULT_CODE", 0) ?: 0
+        @Suppress("DEPRECATION")
+        resultData = intent?.getParcelableExtra("DATA")
         
         if (resultCode != 0 && resultData != null) {
             mediaProjection = mediaProjectionManager?.getMediaProjection(resultCode, resultData!!)
@@ -91,6 +92,7 @@ class ScreenCaptureService : Service() {
                 .setSmallIcon(android.R.drawable.ic_menu_gallery)
                 .build()
         } else {
+            @Suppress("DEPRECATION")
             Notification.Builder(this)
                 .setContentTitle("Magpie Android")
                 .setContentText("超分辨率运行中...")
@@ -166,7 +168,8 @@ class ScreenCaptureService : Service() {
                 WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                     WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             PixelFormat.TRANSLUCENT
         )
         params.gravity = Gravity.TOP or Gravity.START
